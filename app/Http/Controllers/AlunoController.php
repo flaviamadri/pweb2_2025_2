@@ -74,6 +74,22 @@ class AlunoController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $dado = Aluno::findOrFail($id);
+        $dado->delete();
+        return redirect('aluno');
     }
+
+    public function search(Request $request)
+    {
+        if(!empty($request->valor)){
+            $dados = Aluno::where(
+                $request->tipo,
+                'like',
+                "%$request->valor%" //filtra no pesquisar
+            )->get();
+        } else{
+            $dados = Aluno::All();
+        }
+        return view('aluno.list', ["dados" => $dados]);
+        }
 }
