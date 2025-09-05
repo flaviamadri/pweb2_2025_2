@@ -33,3 +33,16 @@
 2025-09-02T18:27:44.754836Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
 2025-09-02T18:27:44.829552Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060
 2025-09-02T18:27:44.829673Z 0 [System] [MY-010931] [Server] C:\laragon\bin\mysql\mysql-8.0.30-winx64\bin\mysqld: ready for connections. Version: '8.0.30'  socket: ''  port: 3306  MySQL Community Server - GPL.
+2025-09-02T20:21:40.922581Z 92 [System] [MY-013172] [Server] Received SHUTDOWN from user root. Shutting down mysqld (Version: 8.0.30).
+2025-09-02T20:21:40.924172Z 0 [System] [MY-013105] [Server] C:\laragon\bin\mysql\mysql-8.0.30-winx64\bin\mysqld: Normal shutdown.
+2025-09-02T20:21:41.689111Z 0 [System] [MY-010910] [Server] C:\laragon\bin\mysql\mysql-8.0.30-winx64\bin\mysqld: Shutdown complete (mysqld 8.0.30)  MySQL Community Server - GPL.
+2025-09-05T16:33:55.523980Z 0 [Warning] [MY-010097] [Server] Insecure configuration for --secure-file-priv: Current value does not restrict location of generated files. Consider setting it to a valid, non-empty path.
+2025-09-05T16:33:55.524839Z 0 [Warning] [MY-010918] [Server] 'default_authentication_plugin' is deprecated and will be removed in a future release. Please use authentication_policy instead.
+2025-09-05T16:33:55.524905Z 0 [System] [MY-010116] [Server] C:\laragon\bin\mysql\mysql-8.0.30-winx64\bin\mysqld (mysqld 8.0.30) starting as process 54544
+2025-09-05T16:33:55.667599Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2025-09-05T16:33:56.367045Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2025-09-05T16:33:57.008889Z 0 [Warning] [MY-013829] [Server] Missing data directory for ICU regular expressions: C:\laragon\bin\mysql\mysql-8.0.30-winx64\lib\private\.
+2025-09-05T16:33:57.054241Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2025-09-05T16:33:57.055194Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2025-09-05T16:33:57.243547Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060
+2025-09-05T16:33:57.243637Z 0 [System] [MY-010931] [Server] C:\laragon\bin\mysql\mysql-8.0.30-winx64\bin\mysqld: ready for connections. Version: '8.0.30'  socket: ''  port: 3306  MySQL Community Server - GPL.
