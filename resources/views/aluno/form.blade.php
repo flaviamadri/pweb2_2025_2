@@ -38,7 +38,7 @@
                 @foreach ($categorias as $item)
                       <option value="{{$item->id}}"
                         {{old('categoria_id',$dado->categoria_id ?? '')
-                        == $categoria->id ?  'selected' : ''}}>
+                        == $item->id ?  'selected' : ''}}>
                         {{$item->nome}}
                       </option>
                 @endforeach
