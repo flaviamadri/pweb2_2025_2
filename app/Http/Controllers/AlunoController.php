@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Aluno;
 use Illuminate\Http\Request;
+use App\Models\CategoriaAluno;
 
 class AlunoController extends Controller
 {
@@ -10,8 +11,7 @@ class AlunoController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-                                                                                            $dados = Aluno::All();
+    {                                                                                            $dados = Aluno::All();
 
           //dd($alunos);//php artisan migrate
           //php artisan serve
@@ -24,23 +24,48 @@ class AlunoController extends Controller
      */
     public function create()
     {
-        return view('aluno.form');
+        $categorias = CategoriaAluno::orderBy('nome')->get();
+        return view('aluno.form' , ['categorias'=> $categorias]);
     }
 
+
+    private function validadeRequest(Request $request)
+    {
+        $request->validate([
+            'nome'=>'required',
+            'cpf'=>'required',
+            'categoria_id'=>'required',
+            'imagem'=>'nullable|image|mimes:png,jpg,jpeg',
+        ],[
+            'nome.required' => 'O :attribute é obrigatório',
+            'cpf.required' => 'O :attribute é obrigatório',
+            'categoria_id.required' => 'O :attribute é obrigatório',
+            'imagem.image' => 'O :attribute deve ser enviado',
+            'imagem.mimes' => 'O :attribute ddeve ser das extensões PNG, JPG e JPEG',
+        ]);
+
+    }
 
     public function store(Request $request)
     {
         //dd($request->all());
 
-        $request->validate([
-            'nome'=>'required',
-            'cpf'=>'required',
-        ],[
-            'nome.required' => 'O :attribute é obrigatório',
-            'cpf.required' => 'O :attribute é obrigatório',
-        ]);
+        $this->validadeRequest( $request);
+        $data = $request->all();
+        $imagem = $request->file('imagem');
 
-        Aluno::create($request->all());
+        if ($imagem){
+            $nome_imagem = date('YmdHis'). ".".$imagem->getClientOriginalExtension();
+            $diretorio = "imagem/aluno/";
+            $imagem->storeAs(
+                $diretorio,
+                $nome_imagem,
+                'public'
+            );
+            $data['imagem'] = $diretorio . $nome_imagem;
+        }
+
+        Aluno::create($data);
 
         return redirect('aluno');
     }
@@ -59,8 +84,13 @@ class AlunoController extends Controller
     public function edit(string $id)
     {
         $dado = Aluno::findOrFail($id);
-        //dd($dado)
-        return view('aluno.form', ['dado' => $dado]);
+        $categorias = CategoriaAluno::orderBy('nome')->get();
+
+        return view('aluno.form',
+        [
+            'dado' => $dado,
+            'categorias' => $categorias
+        ]);
     }
 
     /**
@@ -69,15 +99,22 @@ class AlunoController extends Controller
     public function update(Request $request, string $id)
     {
         //dd($request->all(), $id);
-         $request->validate([
-            'nome'=>'required',
-            'cpf'=>'required',
-        ],[
-            'nome.required' => 'O :attribute é obrigatório',
-            'cpf.required' => 'O :attribute é obrigatório',
-        ]);
+         $this->validadeRequest( $request);
+        $data = $request->all();
+        $imagem = $request->file('imagem');
 
-        Aluno::updateOrCreate(['id' => $id], $request->all());
+        if ($imagem){
+            $nome_imagem = date('YmdHis'). ".".$imagem->getClientOriginalExtension();
+            $diretorio = "imagem/aluno/";
+            $imagem->storeAs(
+                $diretorio,
+                $nome_imagem,
+                'public'
+            );
+            $data['imagem'] = $diretorio . $nome_imagem;
+        }
+
+        Aluno::updateOrCreate(['id' => $id], $data);
 
         return redirect('aluno');
     }
