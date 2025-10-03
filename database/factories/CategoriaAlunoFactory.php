@@ -23,7 +23,7 @@ class CategoriaAlunoFactory extends Factory
                 'GRADUAÇÃO',
                 'PÓS-GRADUAÇÃO',
             ]),
-            'nível' => $this->faker->numberBetween(1,4)
+            'nivel' => $this->faker->numberBetween(1,4)
         ];
     }
 }

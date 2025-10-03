@@ -18,7 +18,7 @@ class AlunoFactory extends Factory
     {
         return [
             'nome' => $this->faker->name,
-            'cpf' => $this->numerify('###########'),
+            'cpf' => $this->faker->numerify('###########'),
             'telefone' => $this->faker->phoneNumber(),
             'imagem' => null,
             'categoria_id' => (CategoriaAluno::All()->random())->id

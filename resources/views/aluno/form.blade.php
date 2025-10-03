@@ -34,7 +34,7 @@
 
         <div class="col">
             <label for="">Categoria</label>
-            <select name="categoria_id">
+            <select class="form-select" name="categoria_id">
                 @foreach ($categorias as $item)
                       <option value="{{$item->id}}"
                         {{old('categoria_id',$dado->categoria_id ?? '')

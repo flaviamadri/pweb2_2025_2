@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('categoria_alunos', function (Blueprint $table) {
             $table->id();
             $table->string('nome', 80);
-            $table->string('nivel', 40)->nullable;
+            $table->string('nivel', 40)->nullable();
             $table->timestamps();
         });
     }

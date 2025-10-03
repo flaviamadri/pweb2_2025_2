@@ -40,17 +40,23 @@
                         <td><strong>Nome</strong></td>
                         <td><strong>CPF</strong></td>
                         <td><strong>Telefone</strong></td>
+                        <td><strong>Categoria</strong></td>
                         <td><strong>Editar</strong></td>
                         <td><strong>Deletar</strong></td>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($dados as $item)
+                    @php
+                        $nome_imagem = !empty($item->imagem) ? $item->imagem : 'sem_imagem.png';
+                    @endphp
                         <tr>
+                            <td><img src="/storage/{{$nome_imagem}}" width="100px" height="100px" alt="img"></td>
                             <td>{{ $item->id }}</td>
                             <td>{{ $item->nome }}</td>
                             <td>{{ $item->cpf }}</td>
                             <td>{{ $item->telefone }}</td>
+                            <td>{{ $item->categoria->nome }}</td>
                             <td>
                                 <a href="{{route('aluno.edit', $item->id)}}" class="btn btn-warning">
                                     <i class="fa-solid fa-pen-to-square"></i>
