@@ -1,80 +1,96 @@
-@extends ('base')
-@section('titulo', 'Formulário Aluno')
+@extends('base')
+@section('titulo', 'Listagem de Alunos')
 @section('conteudo')
-      <div class='container'>
-            <h3 class='mt-5 mb-5'>Listagem de alunos</h3>
-            <form action="{{ route('aluno.search') }}" method='post'>
+
+    <h3>Listagem de Alunos</h3>
+
+    <div class="row">
+        <div class="col">
+            <form action="{{ route('aluno.search') }}" method="post">
                 @csrf
                 <div class="row">
-                    <div class="col-md-4">
-                        <label class="form-label"><strong>Tipo</strong></label>
-                        <select name="tipo" class='form-select'>
+                    <div class="col-md-3">
+                        <label class="form-label">Tipo</label>
+                        <select name="tipo" class="form-select">
                             <option value="nome">Nome</option>
                             <option value="cpf">CPF</option>
                             <option value="telefone">Telefone</option>
                         </select>
-                        <br>
-                        <button type="submit" class="btn btn-success">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            Buscar
-                        </button>
 
-                        <a class="btn btn-success" href="{{ url('/aluno/create') }}">
-                            <i class="fa-solid fa-plus"></i>
-                            Novo
-                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Valor</label>
+                        <input type="text" class="form-control" name="valor" placeholder="Pesquisar...">
                     </div>
 
                     <div class="col-md-3">
-                        <label class="form-label"><strong>Valor</strong></label>
-                        <input type="text" class="form-control" name="valor" placeholder='Pesquisar...'>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa-solid fa-magnifying-glass"></i> Buscar
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <a class="btn btn-success" href="{{ url('/aluno/create') }}"> <i class="fa-solid fa-plus"></i>
+                            Novo</a>
+                    </div>
+                    <div class="col-md-3">
+                        <a class="btn btn-danger" href="{{ url('/aluno/report') }}"> <i class="fa-solid fa-pdf-o"></i>
+                            Relatório PDF</a>
+                    </div>
+                    <div class="col-md-3">
+                        <a class="btn btn-warning" href="{{ url('/aluno/chart') }}"> <i class="fa-solid fa-pdf-o"></i>
+                            Gerar Gráfico</a>
                     </div>
                 </div>
-
             </form>
 
-            <table class="table">
-                <thead>
-                    <tr><br>
-                        <td><strong>#ID</strong></td>
-                        <td><strong>Nome</strong></td>
-                        <td><strong>CPF</strong></td>
-                        <td><strong>Telefone</strong></td>
-                        <td><strong>Categoria</strong></td>
-                        <td><strong>Editar</strong></td>
-                        <td><strong>Deletar</strong></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($dados as $item)
+        </div>
+    </div>
+
+    <div class="row">
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td>Imagem</td>
+                    <td>#ID</td>
+                    <td>Nome</td>
+                    <td>CPF</td>
+                    <td>Telefone</td>
+                    <td>Categoria</td>
+                    <td>Ação</td>
+                    <td>Ação</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($dados as $item)
                     @php
                         $nome_imagem = !empty($item->imagem) ? $item->imagem : 'sem_imagem.png';
                     @endphp
-                        <tr>
-                            <td><img src="/storage/{{$nome_imagem}}" width="100px" height="100px" alt="img"></td>
-                            <td>{{ $item->id }}</td>
-                            <td>{{ $item->nome }}</td>
-                            <td>{{ $item->cpf }}</td>
-                            <td>{{ $item->telefone }}</td>
-                            <td>{{ $item->categoria->nome }}</td>
-                            <td>
-                                <a href="{{route('aluno.edit', $item->id)}}" class="btn btn-warning">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </a>
-                            </td>
-                            <td>
-                                <form action="{{ route('aluno.destroy', $item->id) }}" method="post">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Deseja deletar o resgistro?')"> <i
-                                            class="fas fa-trash"></i></button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-</body>
+                    <tr>
+                        <td><img src="/storage/{{ $nome_imagem }}" width="100px" height="100px" alt="img"></td>
+                        <td>{{ $item->id }}</td>
+                        <td>{{ $item->nome }}</td>
+                        <td>{{ $item->cpf }}</td>
+                        <td>{{ $item->telefone }}</td>
+                        <td>{{ $item->categoria->nome }}</td>
+                        <td>
+                            <a href="{{ route('aluno.edit', $item->id) }}" class="btn btn-outline-warning">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <form action="{{ route('aluno.destroy', $item->id) }}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('Deseja Remover o registro?')"> <i
+                                        class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+
 @stop

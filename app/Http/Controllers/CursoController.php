@@ -7,59 +7,98 @@ use Illuminate\Http\Request;
 
 class CursoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $dados = Curso::All();
+
+        return view('curso.list', ['dados' => $dados]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
-        //
+
+        return view('curso.form');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    private function validateRequest(Request $request)
+    {
+        $request->validate([
+            'nome' => 'required',
+            'requisito' => 'nullable|string',
+            'carga_horaria' => 'nullable|numeric',
+            'valor' => 'nullable|numeric',
+        ], [
+            'nome.required' => 'O :attribute é obrigatório',
+            'requisito.string' => 'O :attribute deve ser caractére ',
+            'carga_horaria.numeric' => 'O :attribute deve ser númerico',
+            'valor.numeric' => 'O :attribute deve ser númerico',
+        ]);
+    }
+
+
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        $this->validateRequest($request);
+        $data = $request->all();
+
+        Curso::create($data);
+
+        return redirect('curso');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Curso $curso)
+    public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Curso $curso)
+    public function edit(string $id)
     {
-        //
+        // dd($dado);
+        $dado = Curso::findOrFail($id);
+
+        return view( 'curso.form',
+            [
+                'dado' => $dado,
+            ]
+        );
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Curso $curso)
+
+    public function update(Request $request, string $id)
     {
-        //
+        //dd($request->all());
+        $this->validateRequest($request);
+        $data = $request->all();
+
+        Curso::updateOrCreate(['id' => $id], $data);
+
+        return redirect('curso');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Curso $curso)
+
+    public function destroy(string $id)
     {
-        //
+        $dado = Curso::findOrFail($id);
+
+        $dado->delete();
+
+        return redirect('curso');
+    }
+
+    public function search(Request $request)
+    {
+        if (!empty($request->valor)) {
+            $dados = Curso::where(
+                $request->tipo,
+                'like',
+                "%$request->valor%"
+            )->get();
+        } else {
+            $dados = Curso::All();
+        }
+
+        return view('curso.list', ["dados" => $dados]);
     }
 }

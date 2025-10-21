@@ -1,62 +1,59 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Charts\AlunoQtdCursoChart;
 use App\Models\Aluno;
-use Illuminate\Http\Request;
 use App\Models\CategoriaAluno;
+use Illuminate\Http\Request;
+use PDF;
 
 class AlunoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
-    {                                                                                            $dados = Aluno::All();
+    {
+        $dados = Aluno::All();
 
-          //dd($alunos);//php artisan migrate
-          //php artisan serve
-
-      return view('aluno.list',['dados'=> $dados]);
+        return view('aluno.list', ['dados' => $dados]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
+        //use App\Models\CategoriaAluno;
         $categorias = CategoriaAluno::orderBy('nome')->get();
-        return view('aluno.form' , ['categorias'=> $categorias]);
+
+        return view('aluno.form', ['categorias' => $categorias]);
     }
 
-
-    private function validadeRequest(Request $request)
+    private function validateRequest(Request $request)
     {
         $request->validate([
-            'nome'=>'required',
-            'cpf'=>'required',
-            'categoria_id'=>'required',
-            'imagem'=>'nullable|image|mimes:png,jpg,jpeg',
-        ],[
+            'nome' => 'required',
+            'cpf' => 'required',
+            'categoria_id' => 'required',
+            'imagem' => 'nullable|image|mimes:png,jpg,jpeg'
+        ], [
             'nome.required' => 'O :attribute é obrigatório',
             'cpf.required' => 'O :attribute é obrigatório',
             'categoria_id.required' => 'O :attribute é obrigatório',
             'imagem.image' => 'O :attribute deve ser enviado',
-            'imagem.mimes' => 'O :attribute ddeve ser das extensões PNG, JPG e JPEG',
+            'imagem.mimes' => 'O :attribute deve ser das extensões:PNG,JPEG,JPG',
         ]);
-
     }
+
 
     public function store(Request $request)
     {
-        //dd($request->all());
-
-        $this->validadeRequest( $request);
+        // dd($request->all());
+        $this->validateRequest($request);
         $data = $request->all();
         $imagem = $request->file('imagem');
 
-        if ($imagem){
-            $nome_imagem = date('YmdHis'). ".".$imagem->getClientOriginalExtension();
+        if ($imagem) {
+            $nome_imagem = date('YmdiHs') . "." . $imagem->getClientOriginalExtension();
             $diretorio = "imagem/aluno/";
+
             $imagem->storeAs(
                 $diretorio,
                 $nome_imagem,
@@ -70,42 +67,40 @@ class AlunoController extends Controller
         return redirect('aluno');
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
     public function edit(string $id)
     {
+        // dd($dado);
         $dado = Aluno::findOrFail($id);
         $categorias = CategoriaAluno::orderBy('nome')->get();
 
-        return view('aluno.form',
-        [
-            'dado' => $dado,
-            'categorias' => $categorias
-        ]);
+        return view(
+            'aluno.form',
+            [
+                'dado' => $dado,
+                'categorias' => $categorias
+            ]
+        );
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, string $id)
     {
-        //dd($request->all(), $id);
-         $this->validadeRequest( $request);
+        //dd($request->all());
+        $this->validateRequest($request);
         $data = $request->all();
         $imagem = $request->file('imagem');
 
-        if ($imagem){
-            $nome_imagem = date('YmdHis'). ".".$imagem->getClientOriginalExtension();
+        if ($imagem) {
+            $nome_imagem = date('YmdiHs') . "." . $imagem->getClientOriginalExtension();
             $diretorio = "imagem/aluno/";
+
             $imagem->storeAs(
                 $diretorio,
                 $nome_imagem,
@@ -119,27 +114,50 @@ class AlunoController extends Controller
         return redirect('aluno');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(string $id)
     {
         $dado = Aluno::findOrFail($id);
+
         $dado->delete();
+
         return redirect('aluno');
     }
 
     public function search(Request $request)
     {
-        if(!empty($request->valor)){
+        if (!empty($request->valor)) {
             $dados = Aluno::where(
                 $request->tipo,
                 'like',
-                "%$request->valor%" //filtra no pesquisar
+                "%$request->valor%"
             )->get();
-        } else{
+        } else {
             $dados = Aluno::All();
         }
+
         return view('aluno.list', ["dados" => $dados]);
-        }
+    }
+    public function report()
+    {
+
+        //select * from Aluno order by nome
+        //$dados = Aluno::All()
+        $dados = Aluno::orderBy('nome')->get();
+        //$dados = Aluno::where('nome', 'like', "a%")->get();
+
+        $data = [
+            'titulo' => 'Relatório Listagem de Alunos',
+            'dados' =>  $dados,
+        ];
+
+        $pdf = PDF::loadView('aluno.report', $data);
+
+        return $pdf->download('relatorio_listagem_alunos.pdf');
+    }
+
+    public function chart(AlunoQtdCursoChart $chart){
+
+        return view('aluno.chart', ['chart' => $chart->build()]);
+    }
 }
